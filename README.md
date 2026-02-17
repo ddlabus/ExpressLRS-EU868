@@ -2,21 +2,21 @@
 
 Custom ELRS firmware for E32-900M30S module (SX1276, 1W output).
 
-![E32-868M30S Module](images/E32-868M30S.webp)
+![E32-868M30S Module](https://raw.githubusercontent.com/ddlabus/ExpressLRS-EU868/main/images/E32-868M30S.webp)
 
 ## Hardware
 
 ### Receiver (RX)
-- **MCU:** ESP8285
+- **MCU:** ESP32-C3 SuperMini
 - **Radio:** E32-900M30S (SX1276, 30dBm/1W)
 
-![ESP8285](images/ESP8285M2.jpg)
+![ESP32-C3 SuperMini](https://raw.githubusercontent.com/ddlabus/ExpressLRS-EU868/main/images/ESP32-C3.jpg)
 
 ### Transmitter (TX)
 - **MCU:** ESP32 WEMOS Lite
 - **Radio:** E32-900M30S (SX1276, 30dBm/1W)
 
-![ESP32 WEMOS Lite](images/ESP32_WEMOS_LITE.jpg)
+![ESP32 WEMOS Lite](https://raw.githubusercontent.com/ddlabus/ExpressLRS-EU868/main/images/ESP32_WEMOS_LITE.jpg)
 
 ## Frequency
 - Band: EU868 (863-870MHz)
@@ -25,43 +25,56 @@ Custom ELRS firmware for E32-900M30S module (SX1276, 1W output).
 
 ## Wiring Diagrams
 
-### RX: ESP-01F + E32-900M30S
+### RX: ESP32-C3 SuperMini + E32-900M30S
 
 ```
-ESP-01F (ESP8285)          E32-900M30S
+ESP32-C3 SuperMini         E32-900M30S
 ┌─────────────────┐        ┌─────────────────┐
-│ GPIO3 (RX) ─────┼────────┼─ TX (to FC)     │
-│ GPIO1 (TX) ─────┼────────┼─ RX (from FC)   │
-│ GPIO4  ─────────┼────────┼─ DIO0           │
-│ GPIO5  ─────────┼────────┼─ DIO1           │
-│ GPIO12 ─────────┼────────┼─ MISO           │
-│ GPIO13 ─────────┼────────┼─ MOSI           │
-│ GPIO14 ─────────┼────────┼─ SCK            │
-│ GPIO15 ─────────┼────────┼─ NSS            │
-│ GPIO0  ─────────┼────────┼─ RXEN           │
-│ GPIO2  ─────────┼────────┼─ TXEN           │
-│ GPIO16 ─────────┼────────┼─ LED (optional) │
+│                 │        │                 │
+│ GPIO20 (RX) ────┼────────┼─ (to FC)        │
+│ GPIO21 (TX) ────┼────────┼─ (from FC)      │
+│                 │        │                 │
+│ GPIO1  ─────────┼────────┼─ DIO0           │
+│ GPIO2  ─────────┼────────┼─ DIO1           │
+│ GPIO5  ─────────┼────────┼─ MISO           │
+│ GPIO4  ─────────┼────────┼─ MOSI           │
+│ GPIO6  ─────────┼────────┼─ SCK            │
+│ GPIO7  ─────────┼────────┼─ NSS            │
+│ GPIO3  ─────────┼────────┼─ RST            │
+│                 │        │                 │
+│ GPIO10 ─────────┼────────┼─ RXEN           │
+│ GPIO0  ─────────┼────────┼─ TXEN           │
+│                 │        │                 │
+│ GPIO8  ─────────┼────────┼─ LED            │
+│                 │        │                 │
 │ 3V3    ─────────┼────────┼─ VCC (3.3V)     │
 │ GND    ─────────┼────────┼─ GND            │
 └─────────────────┘        └─────────────────┘
 ```
 
-| ESP-01F Pin | E32-900M30S Pin | Function |
-|-------------|-----------------|----------|
-| GPIO4 | DIO0 | Radio interrupt |
-| GPIO5 | DIO1 | Radio interrupt |
-| GPIO12 | MISO | SPI data in |
-| GPIO13 | MOSI | SPI data out |
-| GPIO14 | SCK | SPI clock |
-| GPIO15 | NSS | SPI chip select |
-| GPIO0 | RXEN | PA RX enable |
-| GPIO2 | TXEN | PA TX enable |
+| ESP32-C3 Pin | E32-900M30S Pin | Function |
+|--------------|-----------------|----------|
+| GPIO20 | - | Serial RX (to FC) |
+| GPIO21 | - | Serial TX (from FC) |
+| GPIO1 | DIO0 | Radio interrupt |
+| GPIO2 | DIO1 | Radio interrupt |
+| GPIO5 | MISO | SPI data in |
+| GPIO4 | MOSI | SPI data out |
+| GPIO6 | SCK | SPI clock |
+| GPIO7 | NSS | SPI chip select |
+| GPIO3 | RST | Radio reset |
+| GPIO10 | RXEN | PA RX enable |
+| GPIO0 | TXEN | PA TX enable |
+| GPIO8 | - | LED |
+| 3V3 | VCC | Power 3.3V |
+| GND | GND | Ground |
 
-### TX: ESP32-WROOM-32E + E32-900M30S
+### TX: ESP32 WEMOS Lite + E32-900M30S
 
 ```
-ESP32-WROOM-32E            E32-900M30S
+ESP32 WEMOS Lite           E32-900M30S
 ┌─────────────────┐        ┌─────────────────┐
+│                 │        │                 │
 │ GPIO26 ─────────┼────────┼─ DIO0           │
 │ GPIO25 ─────────┼────────┼─ DIO1           │
 │ GPIO19 ─────────┼────────┼─ MISO           │
@@ -69,48 +82,79 @@ ESP32-WROOM-32E            E32-900M30S
 │ GPIO18 ─────────┼────────┼─ SCK            │
 │ GPIO5  ─────────┼────────┼─ NSS            │
 │ GPIO14 ─────────┼────────┼─ RST            │
+│                 │        │                 │
 │ GPIO13 ─────────┼────────┼─ RXEN           │
 │ GPIO12 ─────────┼────────┼─ TXEN           │
+│                 │        │                 │
 │ GPIO22 ─────────┼────────┼─ LED            │
+│ GPIO17 ─────────┼────────┼─ FAN (optional) │
+│                 │        │                 │
 │ 3V3    ─────────┼────────┼─ VCC (3.3V)     │
 │ GND    ─────────┼────────┼─ GND            │
 └─────────────────┘        └─────────────────┘
 ```
 
+| ESP32 Pin | E32-900M30S Pin | Function |
+|-----------|-----------------|----------|
+| GPIO26 | DIO0 | Radio interrupt |
+| GPIO25 | DIO1 | Radio interrupt |
+| GPIO19 | MISO | SPI data in |
+| GPIO23 | MOSI | SPI data out |
+| GPIO18 | SCK | SPI clock |
+| GPIO5 | NSS | SPI chip select |
+| GPIO14 | RST | Radio reset |
+| GPIO13 | RXEN | PA RX enable |
+| GPIO12 | TXEN | PA TX enable |
+| GPIO22 | - | LED |
+| GPIO17 | - | FAN control (optional) |
+| 3V3 | VCC | Power 3.3V |
+| GND | GND | Ground |
+
 ---
 
-## Flashing Firmware on Virgin ESP
+## Flashing Firmware
 
-### Requirements
-- USB-TTL adapter (CH340, CP2102, FT232)
-- `pip install esptool`
+### RX (ESP32-C3 SuperMini)
 
-### RX (ESP-01F)
-```
-USB-TTL → ESP-01F: TX→GPIO3, RX→GPIO1, 3V3→VCC+EN, GND→GND+GPIO0+GPIO15
-```
+**Via USB-C (built-in bootloader):**
+1. Hold BOOT button
+2. Connect USB-C cable
+3. Release BOOT button
+
 ```bash
-esptool.py --port /dev/ttyUSB0 --baud 460800 write_flash 0x0 ELRS_*_RX_ESP8285_EU868.bin
+esptool.py --port /dev/ttyACM0 --baud 460800 \
+    --chip esp32c3 write_flash 0x0 ELRS_*_RX_ESP32C3_EU868.bin
 ```
 
-### TX (ESP32)
-```
-USB-TTL → ESP32: TX→GPIO3, RX→GPIO1, 3V3→3V3, GND→GND+GPIO0
-```
+### TX (ESP32 WEMOS Lite)
+
 ```bash
-esptool.py --port /dev/ttyUSB0 --baud 460800 --chip esp32 write_flash 0x0 ELRS_*_TX_ESP32_EU868.bin
+esptool.py --port /dev/ttyUSB0 --baud 460800 \
+    --chip esp32 write_flash 0x0 ELRS_*_TX_ESP32_EU868.bin
 ```
 
 ### After Flashing
-1. Disconnect GPIO0 from GND, power cycle
-2. Connect to WiFi: `ExpressLRS RX/TX`
-3. Configure at `10.0.0.1`
+1. Power cycle the module
+2. Connect to WiFi AP: `ExpressLRS RX` or `ExpressLRS TX`
+3. Configure via web UI at `10.0.0.1`
 
 ---
 
 ## Download
-See [Releases](https://github.com/ddlabus/ExpressLRS-EU868/releases)
+
+See [Releases](https://github.com/ddlabus/ExpressLRS-EU868/releases) for compiled firmware.
+
+## Files
+| File | Description |
+|------|-------------|
+| `ELRS_*_RX_ESP32C3_EU868.bin` | Receiver firmware (ESP32-C3) |
+| `ELRS_*_TX_ESP32_EU868.bin` | Transmitter firmware |
+| `ESP32C3_SuperMini_RX.json` | RX hardware layout |
+| `E32-900M30S_TX.json` | TX hardware layout |
+
+---
 
 ## Links
 - [E32-900M30S Datasheet](https://www.cdebyte.com/products/E32-900M30S)
+- [ESP32-C3 SuperMini](https://www.aliexpress.com/item/1005005967641936.html)
 - [ExpressLRS Documentation](https://www.expresslrs.org/)
